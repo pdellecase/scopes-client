@@ -54,8 +54,16 @@ export default function Home(props) {
   function renderLander() {
     return (
       <div className="lander">
-        <h1>Let's scope it</h1>
+        <h1>Let's scope it!</h1>
         <p>Scoping App</p>
+        <div>
+          <Link to="/login" className="btn btn-info btn-lg">
+            Login
+          </Link>
+          <Link to="/signup" className="btn btn-success btn-lg">
+            Signup
+          </Link>
+        </div>
       </div>
     );
   }
