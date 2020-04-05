@@ -42,7 +42,7 @@ function App(props) {
         <Navbar fluid collapseOnSelect>
           <Navbar.Header>
             <Navbar.Brand>
-              <Link to="/">Let's scope it</Link>
+              <Link to="/">Let's scope it!</Link>
             </Navbar.Brand>
             <Navbar.Toggle />
           </Navbar.Header>
