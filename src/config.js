@@ -1,5 +1,6 @@
 const dev = {
   STRIPE_KEY: "pk_test_vNerUNffVBYtIjA9KSeuZSX1003paxVHPy",
+  RESTRICTED_DOMAINS: "*",
   s3: {
     REGION: "eu-west-1",
     BUCKET: "scopes-app-2-api-dev-attachmentsbucket-1n9ij54w5aqq9"
@@ -18,6 +19,7 @@ const dev = {
 
 const prod = {
   STRIPE_KEY: "pk_test_vNerUNffVBYtIjA9KSeuZSX1003paxVHPy",
+  RESTRICTED_DOMAINS: "dellecase.com,zendesk.com",
   s3: {
     REGION: "eu-west-1",
     BUCKET: "scopes-app-2-api-prod-attachmentsbucket-aikv45stjsw7"

@@ -8,6 +8,7 @@ import {
 import LoaderButton from "../components/LoaderButton";
 import { useFormFields } from "../libs/hooksLib";
 import { Auth} from "aws-amplify";
+import config from "../config";
 import "./Signup.css";
 
 export default function Signup(props) {
@@ -38,6 +39,22 @@ export default function Signup(props) {
     setIsLoading(true);
   
     try {
+
+      // MR*PDC - Security Check on restricted domains
+      var restrictedDomains = config.RESTRICTED_DOMAINS;
+      if((restrictedDomains!=="")&&(restrictedDomains!==null)&&(restrictedDomains!=='*')){
+        var index=0;
+        var matchedDomain=false;
+        var restrictedDomainsArray = restrictedDomains.split(',');
+        while(index<restrictedDomainsArray.length){
+          if(fields.email.includes(restrictedDomainsArray[index])) {
+            matchedDomain=true;
+          }
+          index++;
+        }
+        if(!matchedDomain) {throw new Error("Application could not sign you in, please contact your Administrator");}
+      }
+
       const newUser = await Auth.signUp({
         username: fields.email,
         password: fields.password
