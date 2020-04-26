@@ -1,0 +1,10 @@
+@media all and (min-width: 480px) {
+    .Stripe {
+      padding: 60px 0;
+    }
+  
+    .Stripe form {
+      margin: 0 auto;
+      max-width: 480px;
+    }
+  }

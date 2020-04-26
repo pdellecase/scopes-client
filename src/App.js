@@ -1,8 +1,8 @@
+import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useState, useEffect } from "react";
-import { LinkContainer } from "react-router-bootstrap";
-import { Link, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { Auth } from "aws-amplify";
-import { Nav, Navbar, NavItem } from "react-bootstrap";
+import { Alert, Collapse, Nav, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from "reactstrap";
 import "./App.css";
 import Routes from "./Routes";
 
@@ -11,7 +11,14 @@ import Routes from "./Routes";
 function App(props) {
   const [isAuthenticating, setIsAuthenticating] = useState(true); 
   const [isAuthenticated, userHasAuthenticated] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
+  const toggleNavbar = () => setCollapsed(!collapsed);
 
+  // Global Alert Management
+  const [alertVisible, setAlertVisible] = useState(false);
+  const onDismissAlert = () => setAlertVisible(false);
+  const [alertMessage, setAlertMessage] = useState("Error!");
+ 
   useEffect(() => {
     onLoad();
   }, []);
@@ -39,36 +46,48 @@ function App(props) {
   return (
     !isAuthenticating && (
       <div className="App container">
-        <Navbar fluid collapseOnSelect>
-          <Navbar.Header>
-            <Navbar.Brand>
-              <Link to="/">Let's scope it!</Link>
-            </Navbar.Brand>
-            <Navbar.Toggle />
-          </Navbar.Header>
-          <Navbar.Collapse>
-            <Nav pullRight>
-              {isAuthenticated ? (
-                <>
-                  <LinkContainer to="/settings">
-                    <NavItem>Settings</NavItem>
-                  </LinkContainer>
-                  <NavItem onClick={handleLogout}>Logout</NavItem>
-                </>
-              ) : (
-                <>
-                  <LinkContainer to="/signup">
-                    <NavItem>Signup</NavItem>
-                  </LinkContainer>
-                  <LinkContainer to="/login">
-                    <NavItem>Login</NavItem>
-                  </LinkContainer>
-                </>
-              )}
-            </Nav>
-          </Navbar.Collapse>
-        </Navbar>
-        <Routes appProps={{ isAuthenticated, userHasAuthenticated }} />
+         <Navbar dark expand="md">
+            <NavbarBrand href="/">
+              <img alt="" src="/favicon-32x32.png" width="32" height="32" className="d-inline-block align-top"/>
+              {' '}&nbsp;&nbsp;Let's scope it!
+            </NavbarBrand>
+            <NavbarToggler onClick={toggleNavbar}>
+             {/* Close mark */}
+             <div id="close-icon" className={!collapsed ? "open" : "" }>
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+              {/* close mark ends */}
+            </NavbarToggler>
+            <Collapse isOpen={!collapsed} navbar>
+              <Nav navbar className="ml-auto">
+                {isAuthenticated ? (
+                  <>
+                     <NavItem>
+                        <NavLink href="/settings">Settings</NavLink>
+                    </NavItem>
+                    <NavItem onClick={handleLogout}>
+                        <NavLink href="/login">Logout</NavLink>
+                    </NavItem>
+                  </>
+                ) : (
+                  <>
+                    <NavItem>
+                        <NavLink href="/signup">Signup</NavLink>
+                    </NavItem>
+                    <NavItem>
+                        <NavLink href="/login">Login</NavLink>
+                    </NavItem>
+                  </>
+                )}
+              </Nav>
+            </Collapse>
+         </Navbar>
+         <Alert color="danger" isOpen={alertVisible} toggle={onDismissAlert}>
+         {alertMessage}
+        </Alert>
+        <Routes appProps={{ isAuthenticated, userHasAuthenticated, setAlertVisible, setAlertMessage }} />
       </div>
     )
   );

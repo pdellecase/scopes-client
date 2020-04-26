@@ -1,8 +1,10 @@
 import React, { useRef, useState, useEffect } from "react";
+import { Button, Form, FormFeedback, FormGroup, Input, Label, Spinner} from "reactstrap";
+import { Link } from "react-router-dom";
+import {Formik,Field} from 'formik'; 
+import * as yup from 'yup'; 
 import { API, Storage } from "aws-amplify";
-import { FormGroup, FormControl, ControlLabel } from "react-bootstrap";
 import { s3Upload } from "../libs/awsLib";
-import LoaderButton from "../components/LoaderButton";
 import config from "../config";
 import "./Scopes.css";
 
@@ -29,6 +31,7 @@ export default function Scopes(props) {
 
         setContent(content);
         setScope(scope);
+        
       } catch (e) {
         alert(e);
       }
@@ -37,9 +40,6 @@ export default function Scopes(props) {
     onLoad();
   }, [props.match.params.id]);
 
-  function validateForm() {
-    return content.length > 0;
-  }
   
   function formatFilename(str) {
     return str.replace(/^\w+-/, "");
@@ -55,10 +55,8 @@ export default function Scopes(props) {
     });
   }
   
-  async function handleSubmit(event) {
+  async function handleSubmit(values) {
     let attachment;
-  
-    event.preventDefault();
   
     if (file.current && file.current.size > config.MAX_ATTACHMENT_SIZE) {
       alert(
@@ -76,12 +74,17 @@ export default function Scopes(props) {
       }
   
       await saveScope({
-        content,
+        content: values.content,
         attachment: attachment || scope.attachment
       });
+
+      props.setAlertVisible(false);
+      
       props.history.push("/");
+
     } catch (e) {
-      alert(e);
+      props.setAlertMessage(e.message);
+      props.setAlertVisible(true);
       setIsLoading(false);
     }
   }
@@ -105,9 +108,13 @@ export default function Scopes(props) {
   
     try {
       await deleteScope();
+
+      props.setAlertVisible(false);
       props.history.push("/");
+
     } catch (e) {
-      alert(e);
+      props.setAlertMessage(e.message);
+      props.setAlertVisible(true);
       setIsDeleting(false);
     }
   }
@@ -115,52 +122,59 @@ export default function Scopes(props) {
   return (
     <div className="Scopes">
       {scope && (
-        <form onSubmit={handleSubmit}>
-          <FormGroup controlId="content">
-            <FormControl
-              value={content}
-              componentClass="textarea"
-              onChange={e => setContent(e.target.value)}
-            />
-          </FormGroup>
-          {scope.attachment && (
-            <FormGroup>
-              <ControlLabel>Attachment</ControlLabel>
-              <FormControl.Static>
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href={scope.attachmentURL}
-                >
-                  {formatFilename(scope.attachment)}
-                </a>
-              </FormControl.Static>
-            </FormGroup>
+
+        <Formik
+          initialValues={{ content: content }}
+          validationSchema={yup.object().shape({
+            content: yup.string()
+              .required('Content is required'),
+          })}
+          onSubmit={values => {
+            handleSubmit(values);
+          }}
+        >
+          {({ errors, touched, handleSubmit}) => (
+            
+            <Form onSubmit={handleSubmit}>
+              <FormGroup>
+                <Label for="content">Content</Label>
+                <Input type="textarea" name="content" autoFocus tag={Field} invalid={errors.content && touched.content} component='input'/>
+                <FormFeedback>{errors.content}</FormFeedback>
+              </FormGroup>
+              {scope.attachment && (
+                <FormGroup>
+                  <Label for="attachment">Attachment</Label>
+                  <Button color="link" name="attachment" tag={Link} to={scope.attachmentURL}>{formatFilename(scope.attachment)}</Button>
+                </FormGroup>
+              )}
+              <FormGroup>
+                {!scope.attachment && <Label for="file">Attachment</Label>}
+                <Input type="file" name="file" id="file" onChange={handleFileChange} />
+              </FormGroup>
+              <br/>
+              <Button
+                block
+                color="primary"
+                type="submit"
+                disabled={isLoading}
+              >               
+                {isLoading && <Spinner as="span" color="light" />}
+                &nbsp;&nbsp;Save
+              </Button>
+              <Button
+                block
+                color="danger"
+                type="submit"
+                disabled={isDeleting}
+                onClick={handleDelete}
+              >               
+                {isDeleting && <Spinner as="span" color="light" />}
+                &nbsp;&nbsp;Delete
+              </Button>
+            </Form>
           )}
-          <FormGroup controlId="file">
-            {!scope.attachment && <ControlLabel>Attachment</ControlLabel>}
-            <FormControl onChange={handleFileChange} type="file" />
-          </FormGroup>
-          <LoaderButton
-            block
-            type="submit"
-            bsSize="large"
-            bsStyle="primary"
-            isLoading={isLoading}
-            disabled={!validateForm()}
-          >
-            Save
-          </LoaderButton>
-          <LoaderButton
-            block
-            bsSize="large"
-            bsStyle="danger"
-            onClick={handleDelete}
-            isLoading={isDeleting}
-          >
-            Delete
-          </LoaderButton>
-        </form>
+        </Formik>
+
       )}
     </div>
   );

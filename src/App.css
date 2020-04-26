@@ -2,6 +2,121 @@
   margin-top: 15px;
 }
 
+.App .navbar{
+  background-color: #01333C;
+}
+
 .App .navbar-brand {
   font-weight: bold;
 }
+
+.App .navbar-toggler {
+  border-color:  rgb(126, 126, 126); /* border color */
+  float: left; /* Move navbar toggle to left */
+}
+
+/* Navbar Hamburger animation */
+
+#close-icon {
+  width: 30px;
+  height: 30px;
+  position: relative;
+  -webkit-transform: rotate(0deg);
+  -moz-transform: rotate(0deg);
+  -o-transform: rotate(0deg);
+  transform: rotate(0deg);
+  -webkit-transition: .5s ease-in-out;
+  -moz-transition: .5s ease-in-out;
+  -o-transition: .5s ease-in-out;
+  transition: .5s ease-in-out;
+  cursor: pointer;
+}
+
+#close-icon span {
+  display: block;
+  height: 2px;
+  width: 100%;
+  background: #fff;
+  border-radius: 2px;
+  opacity: 1;
+  left: 0;
+  -webkit-transform: rotate(0deg);
+  -moz-transform: rotate(0deg);
+  -o-transform: rotate(0deg);
+  transform: rotate(0deg);
+  -webkit-transition: .25s ease-in-out;
+  -moz-transition: .25s ease-in-out;
+  -o-transition: .25s ease-in-out;
+  transition: .25s ease-in-out;
+  margin-top: 5px;
+}
+
+
+/* Close Icon */
+
+#close-icon {
+  padding: 2px;
+}
+
+#close-icon span:nth-child(1) {
+top: 0px;
+-webkit-transform-origin: left center;
+-moz-transform-origin: left center;
+-o-transform-origin: left center;
+transform-origin: left center;
+}
+
+#close-icon span:nth-child(2) {
+top: 18px;
+-webkit-transform-origin: left center;
+-moz-transform-origin: left center;
+-o-transform-origin: left center;
+transform-origin: left center;
+}
+
+#close-icon span:nth-child(3) {
+top: 36px;
+-webkit-transform-origin: left center;
+-moz-transform-origin: left center;
+-o-transform-origin: left center;
+transform-origin: left center;
+}
+
+#close-icon.open span:nth-child(1) {
+-webkit-transform: rotate(45deg);
+-moz-transform: rotate(45deg);
+-o-transform: rotate(45deg);
+  transform: rotate(45deg);
+  top: 1px;
+  left: 1px;
+  position: absolute;
+}
+
+#close-icon.open span:nth-child(2) {
+width: 0%;
+opacity: 0;
+}
+
+#close-icon.open span:nth-child(3) {
+-webkit-transform: rotate(-45deg);
+-moz-transform: rotate(-45deg);
+-o-transform: rotate(-45deg);
+transform: rotate(-45deg);
+transform: rotate(-45deg);
+top: 22px;
+left: 1px;
+position: absolute;
+}
+
+button:focus {
+  outline: none !important;
+  
+}
+
+.navbar-light .navbar-toggler {
+  border-color: none;
+  border: 0px;
+  
+}
+
+/* Navbar Hamburger animation */

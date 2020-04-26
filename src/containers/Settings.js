@@ -1,51 +1,27 @@
-import React, { useState } from "react";
-import { API } from "aws-amplify";
-import { Elements, StripeProvider } from "react-stripe-elements";
-import BillingForm from "../components/BillingForm";
-import config from "../config";
+import React, { Component } from "react";
+import { Button } from "reactstrap";
+import { Link } from "react-router-dom";
 import "./Settings.css";
 
-export default function Settings(props) {
-  const [isLoading, setIsLoading] = useState(false);
+export default class Settings extends Component {
+  constructor(props) {
+    super(props);
 
-  function billUser(details) {
-    return API.post("scopes", "/billing", {
-      body: details
-    });
+    this.state = {
+    };
   }
 
-  async function handleFormSubmit(storage, { token, error }) {
-    if (error) {
-      alert(error);
-      return;
-    }
-  
-    setIsLoading(true);
-  
-    try {
-      await billUser({
-        storage,
-        source: token.id
-      });
-  
-      alert("Your card has been charged successfully!");
-      props.history.push("/");
-    } catch (e) {
-      alert(e);
-      setIsLoading(false);
-    }
+  render() {
+    return (
+        <div className="Settings">
+            <h3><center>Settings</center></h3>
+            <p><Button block color="primary" tag={Link} to="/settings/profile">Edit Profile</Button></p>
+            <p><Button block disabled color="secondary" tag={Link} to="/settings/billing">Billing</Button></p>
+            <p><Button block color="primary" tag={Link} to="/settings/email">Change Email</Button></p>
+            <p><Button block color="primary" tag={Link} to="/settings/password">Change Password</Button></p>  
+            <hr/>
+            <p><Button block color="success" tag={Link} to="/">Back Home</Button></p>  
+      </div>
+    );
   }
-  
-  return (
-    <div className="Settings">
-      <StripeProvider apiKey={config.STRIPE_KEY}>
-        <Elements>
-          <BillingForm
-            isLoading={isLoading}
-            onSubmit={handleFormSubmit}
-          />
-        </Elements>
-      </StripeProvider>
-    </div>
-  );
 }

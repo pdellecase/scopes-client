@@ -1,27 +1,24 @@
 import React, { useRef, useState } from "react";
-import { FormGroup, FormControl, ControlLabel } from "react-bootstrap";
+import { Button, Form, FormFeedback, FormGroup, Input, Label, Spinner} from "reactstrap";
+import {Formik,Field} from 'formik'; 
+import * as yup from 'yup'; 
 import { API } from "aws-amplify";
 import { s3Upload } from "../libs/awsLib";
-import LoaderButton from "../components/LoaderButton";
 import config from "../config";
 import "./NewScope.css";
 
 export default function NewScope(props) {
   const file = useRef(null);
-  const [content, setContent] = useState("");
+  const [content] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  function validateForm() {
-    return content.length > 0;
-  }
 
   function handleFileChange(event) {
     file.current = event.target.files[0];
   }
 
-  async function handleSubmit(event) {
-    event.preventDefault();
-  
+  async function handleSubmit(values) {
+
     if (file.current && file.current.size > config.MAX_ATTACHMENT_SIZE) {
       alert(
         `Please pick a file smaller than ${config.MAX_ATTACHMENT_SIZE /
@@ -37,10 +34,15 @@ export default function NewScope(props) {
         ? await s3Upload(file.current)
         : null;
   
-      await createScope({ content, attachment });
+      await createScope({ content: values.content, attachment });
+
+      props.setAlertVisible(false);
+
       props.history.push("/");
+
     } catch (e) {
-      alert(e);
+      props.setAlertMessage(e.message);
+      props.setAlertVisible(true);
       setIsLoading(false);
     }
   }
@@ -53,29 +55,42 @@ export default function NewScope(props) {
 
   return (
     <div className="NewScope">
-      <form onSubmit={handleSubmit}>
-        <FormGroup controlId="content">
-          <FormControl
-            value={content}
-            componentClass="textarea"
-            onChange={e => setContent(e.target.value)}
-          />
-        </FormGroup>
-        <FormGroup controlId="file">
-          <ControlLabel>Attachment</ControlLabel>
-          <FormControl onChange={handleFileChange} type="file" />
-        </FormGroup>
-        <LoaderButton
-          block
-          type="submit"
-          bsSize="large"
-          bsStyle="primary"
-          isLoading={isLoading}
-          disabled={!validateForm()}
-        >
-          Create
-        </LoaderButton>
-      </form>
+      <Formik
+        initialValues={{ content: content }}
+        validationSchema={yup.object().shape({
+          content: yup.string()
+          .required('Content is required'),
+        })}
+        onSubmit={values => {
+          handleSubmit(values);
+        }}
+      >
+        {({ errors, touched, handleSubmit}) => (
+            
+          <Form onSubmit={handleSubmit}>
+            <FormGroup>
+              <Label for="content">Content</Label>
+              <Input type="textarea" name="content" autoFocus tag={Field} invalid={errors.content && touched.content} component='input'/>
+              <FormFeedback>{errors.content}</FormFeedback>
+            </FormGroup>
+            <FormGroup>
+              <Label for="file">Attachment</Label>
+              <Input type="file" name="file" id="file" onChange={handleFileChange} />
+            </FormGroup>
+            <br/>
+            <Button
+              block
+              color="primary"
+              type="submit"
+              disabled={isLoading}
+            >               
+              {isLoading && <Spinner as="span" color="light" />}
+              &nbsp;&nbsp;Create
+            </Button>
+          </Form>
+        )}
+      </Formik>
+
     </div>
   );
 }
