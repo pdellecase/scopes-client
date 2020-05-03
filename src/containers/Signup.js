@@ -39,32 +39,11 @@ export default function Signup(props) {
         if(!matchedDomain) {throw new Error("Application could not sign you in, please contact your Administrator");}
       }
 
-      alert("email:"+ values.email + 
-        ", firstname:" + values.firstname + 
-        ", lastname:" + values.lastname + 
-        ", initials:" + values.initials + 
-        ", role:" + values.role + 
-        ", region:" + values.region);
-
-      // Signing up in Cognito first
+      // Signing up in Cognito 
       const newUser = await Auth.signUp({
         username: values.email,
         password: values.password
       });
-
-      alert("ready to create user");
-      // Creating a User profile second 
-      await createUserProfile({
-        email: values.email, 
-        firstname: values.firstname, 
-        lastname: values.lastname, 
-        initials: values.initials, 
-        role: values.role, 
-        region: values.region,
-        attachment: null
-      });
-      alert("passed create user");
-
 
       setIsLoading(false);
       setNewUser(newUser);
@@ -97,8 +76,23 @@ export default function Signup(props) {
     setIsLoading(true);
   
     try {
+
+      // Confirm Signup with code
       await Auth.confirmSignUp(values.email, values.confirmationCode.toString());
+      
+      // Authenticate current user
       await Auth.signIn(values.email, values.password);
+
+       // Creating a User profile 
+       await createUserProfile({
+        email: values.email, 
+        firstname: values.firstname, 
+        lastname: values.lastname, 
+        initials: values.initials, 
+        role: values.role, 
+        region: values.region,
+        attachment: null
+      });
 
       props.setAlertVisible(false);
   
