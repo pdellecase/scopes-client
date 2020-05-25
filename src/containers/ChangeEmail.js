@@ -78,7 +78,7 @@ export default function ChangeEmail(props) {
                             disabled={isLoading}
                         >               
                             {isLoading && <Spinner as="span" color="light" />}
-                            &nbsp;&nbsp;Update Email
+                            &nbsp;&nbsp;Change Email
                         </Button>
                     </Form>
                  )}

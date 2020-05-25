@@ -89,8 +89,8 @@ export default function Signup(props) {
         firstname: values.firstname, 
         lastname: values.lastname, 
         initials: values.initials, 
-        role: values.role, 
-        region: values.region,
+        job: values.job, 
+        geography: values.geography,
         attachment: null
       });
 
@@ -142,7 +142,7 @@ export default function Signup(props) {
   function renderForm() {
     return (
       <Formik
-        initialValues={{  email: "", firstname: "", lastname: "", initials: "", role: "", region: "", password: "", confirmPassword: "" }}
+        initialValues={{  email: "", firstname: "", lastname: "", initials: "", job: "", geography: "", password: "", confirmPassword: "" }}
         validationSchema={yup.object().shape({
           email: yup.string()
           .email('A valid Email address is required')
@@ -153,9 +153,9 @@ export default function Signup(props) {
           .required('Please enter your Last Name'),
           initials: yup.string()
           .required('Please enter your Initials'),
-          role: yup.string()
+          job: yup.string()
           .required('Please enter your role'),
-          region: yup.string()
+          geography: yup.string()
           .required('Please enter your region'),
           password: yup.string()
           .min(8, 'Your password must be min 8 characters. It must contain at least one uppercase and one lowercase letter. It must contain at least one number digit and one special character')
@@ -192,8 +192,8 @@ export default function Signup(props) {
               <FormFeedback>{errors.initials}</FormFeedback>
             </FormGroup>
             <FormGroup>
-              <Label for="role">Role</Label>
-              <Input type="select" name="role" id="role" tag={Field} invalid={errors.role && touched.role} component='select'>     
+              <Label for="job">Role</Label>
+              <Input type="select" name="job" id="job" tag={Field} invalid={errors.job && touched.job} component='select'>     
                 <option value="">Select</option>
                 <option value="Solution Architect">Solution Architect</option>
                 <option value="Solution Consultant">Solution Consultant</option>
@@ -202,18 +202,18 @@ export default function Signup(props) {
                 <option value="Manager">Manager</option>
                 <option value="Other">Other</option>
               </Input>
-              <FormFeedback>{errors.role}</FormFeedback>
+              <FormFeedback>{errors.job}</FormFeedback>
             </FormGroup>
             <FormGroup>
-              <Label for="region">Region</Label>
-              <Input type="select" name="region" id="region" tag={Field} invalid={errors.region && touched.region} component='select'>
+              <Label for="geography">Region</Label>
+              <Input type="select" name="geography" id="geography" tag={Field} invalid={errors.geography && touched.geography} component='select'>
               <option value="">Select</option>
                 <option value="AMER">AMER</option>
                 <option value="APAC">APAC</option>
                 <option value="EMEA">EMEA</option>
                 <option value="LATAM">LATAM</option>
               </Input>
-              <FormFeedback>{errors.region}</FormFeedback>
+              <FormFeedback>{errors.geography}</FormFeedback>
             </FormGroup>
             <FormGroup>
               <Label for="password">Password</Label>

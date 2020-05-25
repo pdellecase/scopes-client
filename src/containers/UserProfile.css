@@ -1,0 +1,12 @@
+.UserProfile {
+  padding: 60px 0;
+}
+
+.UserProfile form {
+    padding-bottom: 15px;
+  }
+  
+  .UserProfile form textarea {
+    height: 300px;
+    font-size: 24px;
+  }

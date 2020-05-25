@@ -3,7 +3,7 @@ import { Button, Form, FormFeedback, FormGroup, Input, Label, Spinner} from "rea
 import {Formik,Field} from 'formik'; 
 import * as yup from 'yup'; 
 import { API } from "aws-amplify";
-import { s3Upload } from "../libs/awsLib";
+import { s3FileUpload } from "../libs/awsLib";
 import config from "../config";
 import "./NewScope.css";
 
@@ -31,7 +31,7 @@ export default function NewScope(props) {
   
     try {
       const attachment = file.current
-        ? await s3Upload(file.current)
+        ? await s3FileUpload(file.current)
         : null;
   
       await createScope({ content: values.content, attachment });

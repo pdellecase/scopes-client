@@ -1,0 +1,10 @@
+@media all and (min-width: 480px) {
+    .Admin {
+      padding: 60px 0;
+      margin: 0 auto;
+      max-width: 320px;
+    }
+  }
+  .Admin .Button:last-child {
+    margin-top: 15px;
+  }

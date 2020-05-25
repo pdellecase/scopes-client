@@ -1,8 +1,8 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useState, useEffect } from "react";
-import { withRouter } from "react-router-dom";
-import { Auth } from "aws-amplify";
-import { Alert, Collapse, Nav, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from "reactstrap";
+import { withRouter, Link } from "react-router-dom";
+import { API, Auth, Storage} from "aws-amplify";
+import { Alert, Collapse, Dropdown, DropdownMenu, DropdownItem, DropdownToggle, Nav, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from "reactstrap";
 import "./App.css";
 import Routes from "./Routes";
 
@@ -11,8 +11,16 @@ import Routes from "./Routes";
 function App(props) {
   const [isAuthenticating, setIsAuthenticating] = useState(true); 
   const [isAuthenticated, userHasAuthenticated] = useState(false);
+  const [profile, setProfile] = useState(null);
+  const [userName, setUserName] = useState(null);
+  const [userPict, setUserPict] = useState(null);
+
+
   const [collapsed, setCollapsed] = useState(true);
   const toggleNavbar = () => setCollapsed(!collapsed);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const toggle = () => setDropdownOpen(!dropdownOpen);
+
 
   // Global Alert Management
   const [alertVisible, setAlertVisible] = useState(false);
@@ -22,15 +30,36 @@ function App(props) {
   useEffect(() => {
     onLoad();
   }, []);
-  
+
+
   async function onLoad() {
     try {
+      // Checking if user session exists
       await Auth.currentSession();
       userHasAuthenticated(true);
+
+      // Reload User Profile through API and get key profile info
+     
+      const userProfile = await API.get("users", "/login");
+      if((userProfile) && (userProfile.userActive)) {
+        setProfile(userProfile.profile);
+        setUserName(userProfile.firstname + " " + userProfile.lastname);
+        if(userProfile.attachment){
+          let attachmentURL = await Storage.vault.get(userProfile.attachment);
+          setUserPict(attachmentURL);
+        } else {
+          setUserPict("/assets/gen-avatar.png");
+        }
+      }
+      else {
+        await Auth.signOut();
+        userHasAuthenticated(false);
+        alert("Sorry but your account is not active, contact your administrator!");
+      }
     }
     catch(e) {
       if (e !== 'No current user') {
-        alert(e);
+        alert("Your account is compromised, contact your administrator: " + e);
       }
     }
   
@@ -64,12 +93,27 @@ function App(props) {
               <Nav navbar className="ml-auto">
                 {isAuthenticated ? (
                   <>
+                    {profile==="Administrator" ? (
+                      <NavItem>
+                        <NavLink href="/admin">Admin</NavLink>
+                      </NavItem>
+                    ) : (
+                    <></>
+                    )}
                      <NavItem>
-                        <NavLink href="/settings">Settings</NavLink>
+                        <NavLink>&nbsp;</NavLink>
                     </NavItem>
-                    <NavItem onClick={handleLogout}>
-                        <NavLink href="/login">Logout</NavLink>
-                    </NavItem>
+                    <Dropdown nav isOpen={dropdownOpen} toggle={toggle}>
+                      <DropdownToggle nav caret>
+                        <img alt="" src={userPict} width="30" height="30" className="d-inline-block align-top"/>
+                      </DropdownToggle>
+                      <DropdownMenu>
+                        <DropdownItem header>{userName}</DropdownItem>
+                        <DropdownItem divider />
+                        <DropdownItem tag={Link} to="/settings">My Settings</DropdownItem>
+                        <DropdownItem onClick={handleLogout}>Logout</DropdownItem>
+                      </DropdownMenu>
+                    </Dropdown>
                   </>
                 ) : (
                   <>
@@ -87,7 +131,7 @@ function App(props) {
          <Alert color="danger" isOpen={alertVisible} toggle={onDismissAlert}>
          {alertMessage}
         </Alert>
-        <Routes appProps={{ isAuthenticated, userHasAuthenticated, setAlertVisible, setAlertMessage }} />
+        <Routes appProps={{ isAuthenticated, userHasAuthenticated, profile, setProfile, userName, setUserName, userPict, setUserPict, setAlertVisible, setAlertMessage }} />
       </div>
     )
   );

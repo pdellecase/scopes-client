@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import {Formik,Field} from 'formik'; 
 import * as yup from 'yup'; 
 import { API, Storage } from "aws-amplify";
-import { s3Upload } from "../libs/awsLib";
+import { s3FileUpload } from "../libs/awsLib";
 import config from "../config";
 import "./Scopes.css";
 
@@ -70,7 +70,7 @@ export default function Scopes(props) {
   
     try {
       if (file.current) {
-        attachment = await s3Upload(file.current);
+        attachment = await s3FileUpload(file.current);
       }
   
       await saveScope({
