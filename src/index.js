@@ -24,6 +24,11 @@ Amplify.configure({
     API: {
       endpoints: [
         {
+          name: "crm",
+          endpoint: config.apiGateway.URL,
+          region: config.apiGateway.REGION
+        },
+        {
           name: "scopes",
           endpoint: config.apiGateway.URL,
           region: config.apiGateway.REGION
@@ -32,7 +37,7 @@ Amplify.configure({
           name: "users",
           endpoint: config.apiGateway.URL,
           region: config.apiGateway.REGION
-        },
+        },   
       ]
     }
   });

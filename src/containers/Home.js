@@ -142,20 +142,17 @@ export default function Home(props) {
                   </DropdownToggle>
                   <DropdownMenu right>
                     <DropdownItem tag={Link} to="/scopes/new">
-                      Commercial Launch Services
-                    </DropdownItem>
-                    <DropdownItem disabled>
-                      Enterprise Launch Services
+                      Launch Services
                     </DropdownItem>
                     <DropdownItem divider />
                     <DropdownItem disabled>
-                      Custom App
+                      Custom App Add-on
                     </DropdownItem>
                     <DropdownItem disabled>
-                      Data Migration
+                      Data Migration Add-on
                     </DropdownItem>
                     <DropdownItem disabled>
-                      Agent Training
+                      Agent Training Add-on
                     </DropdownItem>
                   </DropdownMenu>
                 </UncontrolledDropdown>

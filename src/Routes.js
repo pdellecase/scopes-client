@@ -13,7 +13,6 @@ import Stripe from "./containers/Stripe";
 import ChangePassword from "./containers/ChangePassword";
 import ChangeEmail from "./containers/ChangeEmail";
 import Signup from "./containers/Signup";
-import NewScope from "./containers/NewScope";
 import Scopes from "./containers/Scopes";
 import Admin from "./containers/Admin";
 import AdminUsers from "./containers/AdminUsers";
@@ -31,7 +30,6 @@ export default function Routes({ appProps }) {
         <AuthenticatedRoute path="/settings/billing" exact component={Stripe} appProps={appProps} />
         <AuthenticatedRoute path="/settings/password" exact component={ChangePassword} appProps={appProps} />
         <AuthenticatedRoute path="/settings/email" exact component={ChangeEmail} appProps={appProps} />
-        <AuthenticatedRoute path="/scopes/new" exact component={NewScope} appProps={appProps} />
         <AuthenticatedRoute path="/scopes/:id" exact component={Scopes} appProps={appProps} />
         <AuthenticatedAdminRoute path="/admin" exact component={Admin} appProps={appProps} />
         <AuthenticatedAdminRoute path="/admin/users" exact component={AdminUsers} appProps={appProps} />
