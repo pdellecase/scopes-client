@@ -3,10 +3,17 @@ import React, { useState, useEffect } from "react";
 import { withRouter, Link } from "react-router-dom";
 import { API, Auth, Storage} from "aws-amplify";
 import { Alert, Collapse, Dropdown, DropdownMenu, DropdownItem, DropdownToggle, Nav, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from "reactstrap";
+import LoadingOverlay from 'react-loading-overlay'
+import CircleLoader from 'react-spinners/CircleLoader'
+import { css } from "@emotion/core";
 import "./App.css";
 import Routes from "./Routes";
 
-
+const override = css`
+  display: block;
+  margin: 0 auto;
+  border-color: red;
+`;
 
 function App(props) {
   const [isAuthenticating, setIsAuthenticating] = useState(true); 
@@ -26,11 +33,15 @@ function App(props) {
   const [alertVisible, setAlertVisible] = useState(false);
   const onDismissAlert = () => setAlertVisible(false);
   const [alertMessage, setAlertMessage] = useState("Error!");
+
+  // Global Loading Spinner Overlay
+  const [loadingSpinnerVisible, setLoadingSpinnerVisible] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState("Please Wait ...");
+
  
   useEffect(() => {
     onLoad();
   }, []);
-
 
   async function onLoad() {
     try {
@@ -75,6 +86,10 @@ function App(props) {
   return (
     !isAuthenticating && (
       <div className="App container">
+        <LoadingOverlay active={loadingSpinnerVisible} 
+          spinner={<CircleLoader css={override} size={100} color={"#4A90E2"} />} 
+          text={loadingMessage} 
+        >
          <Navbar dark expand="md">
             <NavbarBrand href="/">
               <img alt="" src="/favicon-32x32.png" width="32" height="32" className="d-inline-block align-top"/>
@@ -127,11 +142,17 @@ function App(props) {
                 )}
               </Nav>
             </Collapse>
-         </Navbar>
-         <Alert color="danger" isOpen={alertVisible} toggle={onDismissAlert}>
-         {alertMessage}
-        </Alert>
-        <Routes appProps={{ isAuthenticated, userHasAuthenticated, profile, setProfile, userName, setUserName, userPict, setUserPict, setAlertVisible, setAlertMessage }} />
+          </Navbar>
+
+          <Alert color="danger" isOpen={alertVisible} toggle={onDismissAlert}>
+          {alertMessage}
+          </Alert>
+
+          <Routes appProps={{ isAuthenticated, userHasAuthenticated, profile, setProfile, userName, setUserName, userPict, setUserPict, 
+            setAlertVisible, setAlertMessage, setLoadingSpinnerVisible, setLoadingMessage}} />
+        
+        </LoadingOverlay>
+
       </div>
     )
   );

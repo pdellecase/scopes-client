@@ -2,7 +2,19 @@
     padding-bottom: 15px;
   }
   
-  .Scopes form textarea {
-    height: 300px;
-    font-size: 24px;
-  }
+.Scopes form textarea {
+  height: 300px;
+  font-size: 24px;
+}
+
+.maincrminput {
+  border-color: blue;
+  background-color: rgb(224, 243, 255);
+  pointer-events: none;  
+}
+
+.servicescrminput {
+  border-color: green;
+  background-color: rgb(216, 247, 213);
+  pointer-events: none;  
+}

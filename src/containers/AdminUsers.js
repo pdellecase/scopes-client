@@ -19,7 +19,7 @@ export default function AdminUsers(props) {
   const [filterInput, setFilterInput] = useState("");
 
   // Sort Config users table
-  const [sortConfig, setSortConfig] = React.useState(null);
+  const [sortConfig, setSortConfig] = React.useState({ key:"lastname", direction:"ascending" });
   
   // Pagination users table
   const pageSize = 10;

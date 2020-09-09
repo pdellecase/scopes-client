@@ -1,4 +1,7 @@
 const dev = {
+  DEBUG: true,
+  CRM_URL: "https://zendesk.my.salesforce.com",
+  CRM_CLIENT_KEY: "DZNW1C29HoPikhT8bmVf",
   STRIPE_KEY: "pk_test_vNerUNffVBYtIjA9KSeuZSX1003paxVHPy",
   RESTRICTED_DOMAINS: "*",
   s3: {
@@ -18,6 +21,9 @@ const dev = {
 };
 
 const prod = {
+  DEBUG: false,
+  CRM_URL: "https://zendesk.my.salesforce.com",
+  CRM_CLIENT_KEY: "DZNW1C29HoPikhT8bmVf",
   STRIPE_KEY: "pk_test_vNerUNffVBYtIjA9KSeuZSX1003paxVHPy",
   RESTRICTED_DOMAINS: "dellecase.com,zendesk.com",
   s3: {
@@ -44,5 +50,7 @@ const config = process.env.REACT_APP_STAGE === 'prod'
 export default {
   // Add common config values here
   MAX_ATTACHMENT_SIZE: 5000000,
+  MAX_CRM_LINK_OPTIONS: 50,
+  TRIGGER_CRM_LINK_SELECT: 3,
   ...config
 };

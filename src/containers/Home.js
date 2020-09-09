@@ -87,12 +87,12 @@ export default function Home(props) {
         </div>
 
         <Table responsive hover>
-            <tr>
-              <th>Scope Id</th>
-              <th>Content</th>
-              <th>Created at</th>
-             </tr>
-          <tbody>
+        <tbody>
+          <tr>
+            <th>Scope Id</th>
+            <th>Content</th>
+            <th>Created at</th>
+          </tr>
           {scopes.slice(
               currentPage * pageSize,
               (currentPage + 1) * pageSize
