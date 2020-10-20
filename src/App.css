@@ -17,6 +17,10 @@
   float: left; /* Move navbar toggle to left */
 }
 
+.App .imageradius {
+  border-radius: 50%;
+}
+
 /* Navbar Hamburger animation */
 
 #close-icon {

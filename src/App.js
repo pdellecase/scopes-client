@@ -120,7 +120,7 @@ function App(props) {
                     </NavItem>
                     <Dropdown nav isOpen={dropdownOpen} toggle={toggle}>
                       <DropdownToggle nav caret>
-                        <img alt="" src={userPict} width="30" height="30" className="d-inline-block align-top"/>
+                        <img alt="" src={userPict} crossOrigin="anonymous" width="30" height="30" className="imageradius"/>
                       </DropdownToggle>
                       <DropdownMenu>
                         <DropdownItem header>{userName}</DropdownItem>

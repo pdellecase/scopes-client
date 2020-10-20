@@ -11,14 +11,13 @@ export default function AdminUsers(props) {
   const [isNavbarOpen, setNavbarOpen] = useState(false);
   const toggle = () => setNavbarOpen(!isNavbarOpen);
 
-  // All users table
+  // All Users table
   const [users, setUsers] = useState([]); 
-  // Filtered user table
+  // Filtered Users table
   const [viewableUsers, setViewableUsers] = useState([]);
-  // Filter Input users table
+  // Filter Input Users table
   const [filterInput, setFilterInput] = useState("");
-
-  // Sort Config users table
+  // Sort Config Users table
   const [sortConfig, setSortConfig] = React.useState({ key:"lastname", direction:"ascending" });
   
   // Pagination users table
@@ -36,7 +35,6 @@ export default function AdminUsers(props) {
       }
   
       try {
-
         // Loading Users
         const users = await loadUsers();
         setUsers(users);
@@ -48,7 +46,6 @@ export default function AdminUsers(props) {
       } catch (e) {
         alert(e);
       }
-  
       setIsLoading(false);
     }
   
@@ -74,7 +71,6 @@ export default function AdminUsers(props) {
       handleTableRefresh (filter, sortConfig.key, sortConfig.direction);
     } 
   }
-
 
   // Table sorting request
   function requestSort (key) { 
@@ -120,10 +116,11 @@ export default function AdminUsers(props) {
   }
 
 
-  // Paginated users table
+  // Paginated Users table
   function renderUsersTable(viewableUsers) {
 
     return (
+      
       <React.Fragment>
         <div className="pagination-wrapper">
           <Row form>
@@ -162,7 +159,9 @@ export default function AdminUsers(props) {
         </div>
 
         <Table responsive hover>
+          <thead>
             <tr>
+              <th><Button color="link" block onClick={() => requestSort('initials')}>Int.</Button></th>
               <th><Button color="link" block onClick={() => requestSort('lastname')}>Name</Button></th>
               <th><Button color="link" block onClick={() => requestSort('geography')}>Region</Button></th>
               <th><Button color="link" block onClick={() => requestSort('job')}>Role</Button></th>
@@ -170,14 +169,16 @@ export default function AdminUsers(props) {
               <th><Button color="link" block onClick={() => requestSort('lastLogin')}>Last Login</Button></th>
               <th><Button color="link" block onClick={() => requestSort('userActive')}>Status</Button></th>
              </tr>
+          </thead>
           <tbody>
           {viewableUsers.slice(
               currentPage * pageSize,
               (currentPage + 1) * pageSize
             ).map((data, i) =>  
            
-              <tr>
-                <th scope="row"><Badge color="dark">{data.initials}</Badge>&nbsp;<a href={'mailto:' + data.email + '?subject=Lets scope it - Admin message&body=Hello'} target="_blank" rel="noopener noreferrer">{data.lastname},&nbsp;{data.firstname}</a></th>
+              <tr key={data.userId}>
+                <th scope="row"><center><Badge color="dark">{data.initials}</Badge></center></th>
+                <td><a href={'mailto:' + data.email + '?subject=Lets scope it - Admin message&body=Hello'} target="_blank" rel="noopener noreferrer">{data.lastname},&nbsp;{data.firstname}</a></td>
                 <td><center>{data.geography}</center></td>
                 <td><center>{data.job}</center></td>
                 <td> <center>

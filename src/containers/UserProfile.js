@@ -17,6 +17,7 @@ export default function UserProfile(props) {
 
   // Avatar Editor controls (profile picture)
   const file = useRef(null);
+  const [userProfileURL, setUserProfileURL] = useState(null);
   const [fileValid, setFileValid] = useState(true);
   const [avatarZoom, setAvatarZoom] = useState(1);
   const [avatarRotate, setAvatarRotate] = useState(0);
@@ -36,7 +37,7 @@ export default function UserProfile(props) {
         const attachment = userProfile.attachment;
 
         if (attachment) {
-          userProfile.attachmentURL = await Storage.vault.get(attachment);
+          setUserProfileURL(await Storage.vault.get(attachment));
         }
 
         setUserProfile(userProfile);
@@ -47,7 +48,8 @@ export default function UserProfile(props) {
     }
 
     onLoad();
-  }, []);
+    props.setAlertVisible(false);
+  }, [props]);
 
 
   function handleAvatarZoomChange(event) {
@@ -61,34 +63,38 @@ export default function UserProfile(props) {
   }
   
   function handleFileChange(event) {
-    file.current = event.target.files[0];
-
-    // Check if file is a supported image
-    const  fileType = file.current['type'];
-    const validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
-    if (validImageTypes.includes(fileType)) {
-
-      if (file.current && file.current.size > config.MAX_ATTACHMENT_SIZE) {
-        props.setAlertMessage(
-          `Profile Picture is too large, it should be smaller than ${config.MAX_ATTACHMENT_SIZE /
-            1000000} MB.`);
-        props.setAlertVisible(false);
-        setFileValid(false);
-        return;
-      }
-      // Reset Avatar editor
-      setAvatarZoom(1);
-      if(avatarRotate===0){setAvatarRotate(360);}
-      else {setAvatarRotate(0)};
-      props.setAlertVisible(false);
-      setFileValid(true);
-    }
-    else {
-      props.setAlertMessage("Profile Picture format not supported. Please use png, jpeg or gif !");
-      props.setAlertVisible(true);
-      setFileValid(false);
-    }
     
+    file.current = event.target.files[0];
+  
+    if (file.current) {
+      // Check if file is a supported image
+      const validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
+      if (validImageTypes.includes(file.current['type'])) {
+        
+        if (file.current.size > config.MAX_ATTACHMENT_SIZE) {
+          props.setAlertMessage(
+            `Profile Picture is too large, it should be smaller than ${config.MAX_ATTACHMENT_SIZE /
+              1000000} MB.`);
+          props.setAlertVisible(false);
+          setFileValid(false);
+          file.current = null;
+          return;
+        } 
+        props.setAlertVisible(false);
+        setFileValid(true);
+      }
+      else {
+        props.setAlertMessage("Profile Picture format not supported. Please use png, jpeg or gif !");
+        props.setAlertVisible(true);
+        setFileValid(false);
+        file.current = null;
+      }
+    } 
+    
+    // Reset Avatar editor
+    setAvatarZoom(1);
+    if(avatarRotate===0){setAvatarRotate(360);}
+    else {setAvatarRotate(0)};
   }
 
   function saveUserProfile(userProfile) {
@@ -245,16 +251,17 @@ export default function UserProfile(props) {
                 <CardBody>
                   <AvatarEditor
                     ref={setAvatarEditorRef}
-                    image={(fileValid && file.current)? (file.current):(userProfile.attachmentURL)}
+                    image={(fileValid && file.current)? (file.current):(userProfileURL)}
                     width={200}
                     height={200}
                     border={50}
                     color={[255, 255, 255, 0.6]} // RGBA
-                    scale={avatarZoom}
-                    rotate={avatarRotate}
+                    scale={parseFloat(avatarZoom)}
+                    rotate={parseInt(avatarRotate)}
+                    borderRadius={100}
                     crossOrigin ="anonymous"
                   />
-                  <Row zoom>
+                  <Row>
                     <Col md={5}>
                       <CustomInput type="range" id="AvatarZoomRange" name="AvatarZoomRange" min='0.1' max='10'step="0.1" value={avatarZoom} onChange={handleAvatarZoomChange}/>
                     </Col>
@@ -262,7 +269,7 @@ export default function UserProfile(props) {
                       <Badge color="light">zoom:&nbsp;x{avatarZoom}</Badge>
                     </Col>
                   </Row> 
-                  <Row rotate>
+                  <Row>
                     <Col md={5}>
                       <CustomInput type="range" id="AvatarRotateRange" name="AvatarRotateRange" min='0' max='360'step="1" value={avatarRotate} onChange={handleAvatarRotateChange}/>
                     </Col>

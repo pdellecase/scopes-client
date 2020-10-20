@@ -1,20 +1,50 @@
 .Scopes form {
     padding-bottom: 15px;
   }
-  
-.Scopes form textarea {
-  height: 300px;
-  font-size: 24px;
-}
 
-.maincrminput {
-  border-color: blue;
+.maincrminput:read-only {
+  border-color:rgb(0, 123, 255);
   background-color: rgb(224, 243, 255);
-  pointer-events: none;  
 }
 
-.servicescrminput {
-  border-color: green;
+.maincrmtextarea:read-only {
+  height: 200px;
+  border-color:rgb(0, 123, 255);
+  background-color: rgb(224, 243, 255);
+}
+
+.maincrmselect:disabled {
+  border-color:rgb(0, 123, 255);
+  background-color: rgb(224, 243, 255);
+}
+
+.servicescrminput:read-only {
+  border-color: rgb(41, 167, 69);
   background-color: rgb(216, 247, 213);
-  pointer-events: none;  
+}
+
+.servicescrmselect:disabled {
+  border-color: rgb(41, 167, 69);
+  background-color: rgb(216, 247, 213);
+}
+
+.mainsyncablecrminput {
+  color: rgb(255, 255, 255);
+  background-color: rgb(0, 123, 255); 
+  font-weight: bold; 
+}
+
+.servicessyncablecrminput {
+  color: rgb(255, 255, 255);
+  background-color: rgb(41, 167, 69); 
+  font-weight: bold;
+}
+
+.preserveoriginaltextformat {
+  white-space: pre-line;
+}
+
+.badgeheader{
+  font-size: 15px;
+  vertical-align: top;
 }

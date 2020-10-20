@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "reactstrap";
 import { Link } from "react-router-dom";
 import "./Settings.css";
 
 export default function Settings (props) {
+  
+  useEffect(() => {
+    props.setAlertVisible(false);
+  }, [props]);
 
   return (
     <div className="Settings">
