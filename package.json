@@ -8,7 +8,7 @@
     "@testing-library/react": "^9.4.1",
     "@testing-library/user-event": "^7.2.1",
     "@zendeskgarden/css-bedrock": "^8.0.1",
-    "aws-amplify": "^2.2.5",
+    "aws-amplify": "^6.13.4",
     "bootstrap": "^4.4.1",
     "formik": "^2.1.4",
     "jquery": "^3.5.1",
